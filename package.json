@@ -1,0 +1,20 @@
+{
+  "name": "green-legacy",
+  "version": "1.0.0",
+  "description": "Unser Projekt im Rahmen von TechLabs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "devStart": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luise-wei/green-legacy.git"
+  },
+  "author": "Lukas Heidemann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luise-wei/green-legacy/issues"
+  },
+  "homepage": "https://github.com/luise-wei/green-legacy#readme"
+}
