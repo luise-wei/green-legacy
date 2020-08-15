@@ -3,35 +3,38 @@ const router = express.Router()
 
 const testname = 'Luise'
 
+// show homepage
+// NOTE: may load aggregated data from database
+// e.g. amount of groups, users, challenges
 router.get('/', async (req, res) => {
-   res.render('index',{name:testname})
+   res.render('index')
 })
 
 // show about page
 router.get('/about', async (req, res) => {
-   res.render('index')
+   res.render('about')
 })
 
 // show login page
 router.get('/login', async (req, res) => {
-   res.render('index')
+   res.render('login')
 })
 
 // show user's dashboard with current and archived challenges
 router.get('/dashboard', async (req, res) => {
-   res.render('index',{name:testname})
+   res.render('dashboard',{name:testname})
 })
 
 // show challenge overview -> load all possible challenges from the challenge collection
 router.get('/challenge-overview', async (req, res) => {
-   res.render('index')
+   res.render('challenge-overview')
 })
 
 // show a specific challenge -> ranking, group members, etc.
 // no matter if current or archived
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
 router.get('/challenge-view', async (req, res) => {
-   res.render('index',{name:testname})
+   res.render('challenge-view',{name:testname})
 })
 
 // show invite page to share the challenge with friends
@@ -39,7 +42,7 @@ router.get('/challenge-view', async (req, res) => {
 // 1) on 'accept challenge' in the challenge-overview page
 // 2) on 'send invite' in the share-challenge page
 router.get('/share-challenge', async (req, res) => {
-   res.render('index')
+   res.render('share-challenge')
 })
 
 module.exports = router
