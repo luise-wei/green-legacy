@@ -3,3 +3,9 @@
 @import 'shared/header.css';
 @import 'shared/variables.css';
 @import 'shared/home.css';
+
+:root {
+    --bright-green: #8EB619;
+    --decent-green: #8EB691;
+    --dark-gray: #54595F;
+  }

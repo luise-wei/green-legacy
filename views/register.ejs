@@ -1,0 +1,46 @@
+<h1 class="display-4 heading">Registrieren</h1>
+
+<div class="top-container" style="height: 700px;">
+    <div style="align-items: center; border: solid 1px; border-radius: 5px; width: 50%; margin: auto; padding: 10px; height:550px;">
+        <form style="padding: 10px;">
+            <div class="form-group">
+                <label for="exampleInputUsername">Nutzername</label>
+                <input type="username" class="form-control" id="exampleInputUsername" aria-describedby="usernameHelp">
+                <small id="usernameHelp" class="form-text text-muted">Der Nutzername wird den anderen Nutzern angezeigt.</small>
+            </div>
+            <!-- NOTE: DO we want usernames to appear multiple times or individual names? -->
+            <div class="form-group">
+                <label for="exampleInputEmail">E-Mail Addresse</label>
+                <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp">
+                <small id="emailHelp" class="form-text text-muted">Die E-Mail-Adresse wird keinem Nutzer angezeigt.</small>
+            </div>
+            <!-- TODO: RegEx Validation for correct email format like here: https://www.w3resource.com/javascript/form/email-validation.php-->
+
+            <div class="form-group">
+                <label for="exampleInputPassword">Passwort</label>
+                <input type="password" class="form-control" id="exampleInputPassword" aria-describedby="passwordHelp">
+                <small id="passwordHelp" class="form-text text-muted">Das Passwort muss mindestens 6 Zeichen lang sein.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="exampleInputPasswordCheck">Passwort wiederholen</label>
+                <input type="passwordCheck" class="form-control" id="exampleInputPasswordCheck">
+            </div>
+            <!-- TODO: check passwords to be the same -->
+
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" style="margin-top: 10px;">
+                <label class="form-check-label" for="exampleCheck1">Ich stimme der <button type="button" class="btn btn-link">Datenschutzerklärung</button> zu</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="border-color: var(--decent-green); background-color: var(--decent-green); color: black;">Registrieren</button>
+        </form>
+    </div>
+
+    <div class="divider"></div>
+</div>
+
+<!-- bottom part -->
+<div class="bottom-container">
+    <div height=100px style="text-align: center">Impressum</div>
+</div>

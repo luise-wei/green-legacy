@@ -20,6 +20,11 @@ router.get('/login', async (req, res) => {
    res.render('login')
 })
 
+// show register page
+router.get('/register', async (req, res) => {
+   res.render('register')
+})
+
 // show user's dashboard with current and archived challenges
 router.get('/dashboard', async (req, res) => {
    res.render('dashboard',{name:testname})
