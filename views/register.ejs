@@ -2,40 +2,49 @@
 
 <div class="top-container" style="height: 700px;">
     <div style="align-items: center; border: solid 1px; border-radius: 5px; width: 50%; margin: auto; padding: 10px; height:550px;">
-        <form style="padding: 10px;">
+
+        <form action="/register" method="POST" padding: 10px;">
             <div class="form-group">
                 <label for="exampleInputUsername">Nutzername</label>
-                <input type="username" class="form-control" id="exampleInputUsername" aria-describedby="usernameHelp">
+                <input type="text" name="name" class="form-control" id="exampleInputUsername" aria-describedby="usernameHelp" required>
                 <small id="usernameHelp" class="form-text text-muted">Der Nutzername wird den anderen Nutzern angezeigt.</small>
             </div>
             <!-- NOTE: DO we want usernames to appear multiple times or individual names? -->
             <div class="form-group">
                 <label for="exampleInputEmail">E-Mail Addresse</label>
-                <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp">
+                <input type="email" name="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp" required>
                 <small id="emailHelp" class="form-text text-muted">Die E-Mail-Adresse wird keinem Nutzer angezeigt.</small>
             </div>
             <!-- TODO: RegEx Validation for correct email format like here: https://www.w3resource.com/javascript/form/email-validation.php-->
 
             <div class="form-group">
                 <label for="exampleInputPassword">Passwort</label>
-                <input type="password" class="form-control" id="exampleInputPassword" aria-describedby="passwordHelp">
+                <input type="password" name="password" class="form-control" id="exampleInputPassword" aria-describedby="passwordHelp" required>
                 <small id="passwordHelp" class="form-text text-muted">Das Passwort muss mindestens 6 Zeichen lang sein.</small>
             </div>
             
             <div class="form-group">
                 <label for="exampleInputPasswordCheck">Passwort wiederholen</label>
-                <input type="passwordCheck" class="form-control" id="exampleInputPasswordCheck">
+                <input type="password" name="passwordControl" class="form-control" id="exampleInputPasswordCheck" required>
             </div>
             <!-- TODO: check passwords to be the same -->
 
             <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" style="margin-top: 10px;">
+                <input type="checkbox" name="dataProtectionCheckbox" class="form-check-input" id="exampleCheck1" required style="margin-top: 10px;">
                 <label class="form-check-label" for="exampleCheck1">Ich stimme der <button type="button" class="btn btn-link">Datenschutzerklärung</button> zu</label>
             </div>
 
             <button type="submit" class="btn btn-primary" style="border-color: var(--decent-green); background-color: var(--decent-green); color: black;">Registrieren</button>
         </form>
+
+        <ul>
+            <% if (typeof errors != 'undefined') { %> <% errors.forEach(error => { %>
+            <li><%= error.message %></li>
+            <% }) %> <% } %>
+          </ul>
     </div>
+
+    
 
     <div class="divider"></div>
 </div>
