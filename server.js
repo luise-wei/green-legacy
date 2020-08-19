@@ -36,6 +36,11 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 
+app.use((req, res, next)=>{
+   res.locals.message = req.session.message
+   delete req.session.message
+   next()
+ })
 
 app.use('/', indexRouter)
 

@@ -1,4 +1,5 @@
 const express = require('express')
+const session = require('express-session')
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcrypt')
@@ -73,6 +74,8 @@ router.get('/logout', (req,res) => {
    res.redirect('/login')
 })
 
+
+
 // -----------------
 // -- POST ROUTES --
 // -----------------
@@ -81,46 +84,45 @@ router.get('/logout', (req,res) => {
 router.post("/register", async (req, res) => {
    let { name, email, password, passwordControl } = req.body;
  
-   let errors = [];
- 
-   console.log({
-     name,
-     email,
-     password,
-     passwordControl
-   });
- 
    if (!name || !email || !password || !passwordControl) {
-     errors.push({ message: "Please enter all fields" });
+      req.session.message = {
+         type: 'warning',
+         message: 'Bitte alle Felder ausfüllen!'
+         }
+      res.redirect('/register')
    }
  
-   if (password.length < 6) {
-     errors.push({ message: "Password must be a least 6 characters long" });
+   else if (password.length < 6) {
+      req.session.message = {
+         type: 'warning',
+         message: 'Das Passwort ist zu kurz!'
+         }
+      res.redirect('/register')
    }
  
-   if (password !== passwordControl) {
-     errors.push({ message: "Passwords do not match" });
+   else if (password !== passwordControl) {
+      req.session.message = {
+         type: 'warning',
+         message: 'Die Passwörter stimmen nicht überein!'
+         }
+      res.redirect('/register')
    }
  
-   if (errors.length > 0) {
-      res.render("register", { errors, name, email, password, passwordControl });
-    } else {
+   else {
       hashedPassword = await bcrypt.hash(password, 10);
-      console.log(hashedPassword);
       // Validation passed
       pool.query(
-        `SELECT * FROM users
-          WHERE email = $1`,
-        [email],
-        (err, results) => {
+        `SELECT * FROM users WHERE email = $1`, [email], (err, results) => {
           if (err) {
             console.log(err);
           }
-          console.log(results.rows);
   
           if (results.rows.length > 0) {
-             errors.push({message: "Email already registered"})
-             res.render("register",{ errors})
+            req.session.message = {
+               type: 'warning',
+               message: 'Die EMail-Adresse ist bereits registriert!'
+               }
+            res.redirect('/register')
           } else {
                pool.query(
                `INSERT INTO users (name, email, password)
@@ -131,9 +133,11 @@ router.post("/register", async (req, res) => {
                   if (err) {
                      throw err;
                   }
-                  console.log(results.rows);
-                  req.flash("success_msg", "You are now registered. Please log in");
-                  res.redirect("/login");
+                  req.session.message = {
+                     type: 'success',
+                     message: 'Account wurde erfolgreich registriert!'
+                     }
+                  res.redirect('/login')
                }
                );
           }
@@ -162,6 +166,10 @@ router.post("/register", async (req, res) => {
          return next()
       }
       
+      req.session.message = {
+         type: 'warning',
+         message: 'Um diese Seite zu sehen, musst du dich zunächst anmelden!'
+         }
       res.redirect('/login')
    }
 
