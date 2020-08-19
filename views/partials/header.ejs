@@ -1,5 +1,5 @@
 <header>
-   <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+   <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
       <a class="navbar-brand" href="/"><i class="fas fa-leaf"></i> GreenLegacy</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ourNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -17,13 +17,18 @@
           </li>
         </ul>
         <ul class="navbar-nav">
+          <% if (!isAuthenticated){ %> 
          <li class="nav-item active">
             <a class="nav-link" href="/login">Login</a>
           </li>
          <li class="nav-item active">
-            <!-- TODO: create form for registration, similar to login form -->
             <a class="nav-link" href="/register">Register</a>
           </li>
+          <% } else { %> 
+          <li class="nav-item active">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+        <% } %> 
         </ul>
       </div>
     </nav>

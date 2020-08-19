@@ -8,10 +8,19 @@ const initializePassport = require("../passportConfig")
 
 initializePassport(passport)
 
+
+//pass to every view:
+//is user authenticated or not?
+router.use(function(req,res,next){
+   res.locals.isAuthenticated = req.isAuthenticated()
+   next()
+})
+
+
+
 // show homepage
 // NOTE: may load aggregated data from database
 // e.g. amount of groups, users, challenges
-
 router.get('/', async (req, res) => {
    res.render('index')
 })
@@ -22,29 +31,29 @@ router.get('/about', async (req, res) => {
 })
 
 // show login page
-router.get('/login', async (req, res) => {
+router.get('/login',checkAuthenticated, async (req, res) => {
    res.render('login')
 })
 
 // show register page
-router.get('/register', async (req, res) => {
+router.get('/register',checkAuthenticated, async (req, res) => {
    res.render('register')
 })
 
 // show user's dashboard with current and archived challenges
-router.get('/dashboard', async (req, res) => {
-   res.render('dashboard',{name:testname})
+router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
+   res.render('dashboard',{name:req.user.name})
 })
 
 // show challenge overview -> load all possible challenges from the challenge collection
-router.get('/challenge-overview', async (req, res) => {
+router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
    res.render('challenge-overview')
 })
 
 // show a specific challenge -> ranking, group members, etc.
 // no matter if current or archived
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
-router.get('/challenge-view', async (req, res) => {
+router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
    res.render('challenge-view',{name:testname})
 })
 
@@ -56,6 +65,13 @@ router.get('/share-challenge', async (req, res) => {
    res.render('share-challenge')
 })
 
+
+//Logout route
+router.get('/logout', (req,res) => {
+   req.logOut()
+   req.flash('success_msg','You have logged out')
+   res.redirect('/login')
+})
 
 // -----------------
 // -- POST ROUTES --
@@ -132,6 +148,7 @@ router.post("/register", async (req, res) => {
    failureFlash: true
    }))
 
+   //redirects user to /dashboard route if he's trying to login again altough he is already logged in.
    function checkAuthenticated(req,res,next){
       if (req.isAuthenticated()){
          return res.redirect('/dashboard')
@@ -139,6 +156,7 @@ router.post("/register", async (req, res) => {
       next()
    }
    
+   //redirects user to /login route if he's trying to access sites that should only be accessed when logged in.
    function checkNotAuthenticated(req,res,next){
       if (req.isAuthenticated()){
          return next()
