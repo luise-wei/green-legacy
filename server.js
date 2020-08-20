@@ -29,7 +29,7 @@ app.use(express.static('public'))
 
 app.use(express.urlencoded({extended: false}))
 app.use(session({
-   secret: 'secret',
+   secret: process.env.SECRET,
    resave: false,
    saveUninitialized: false
 }))
@@ -38,6 +38,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 
+//middleware for deleting session message
 app.use((req, res, next)=>{
    res.locals.message = req.session.message
    delete req.session.message
