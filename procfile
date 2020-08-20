@@ -1,1 +1,1 @@
-web: node green-legacy/server.js
+web: node ./server.js
