@@ -7,6 +7,25 @@
     <!-- TODO: list challenges, loaded from DB -->
     <!-- TODO: scrolling trough challenges -->
     <div style="display: flex;flex-direction: column;">
+
+        <div class="gallery">
+            <% challenges.forEach(challenge => { %>
+            <div class="card" style="width: 18rem;">
+                <!-- <img src="..." class="card-img-top" alt="..."> -->
+                <div class="card-body">
+                    <!-- für die Icons könnte auch noch eine Spalte in der DB angelegt werden-->
+                    <h5 class="card-title"> <i class="fas fa-bicycle"></i> <%=challenge.aname%></h5>
+                    <p class="card-text">
+                        Hier könnten wir in der Datenbank noch eine Challenge-Beschreibung einfügen.
+                    </p>
+                    <form action="/challenge/accept?userid=<%=user.id%>&challengeid=<%=challenge.aid%>" method="post">
+                        <input class="btn btn-success" type="submit" name="" value="Challenge wählen" />
+                    </form>
+                </div>
+            </div>
+            <% }) %> 
+        </div>
+
         <div class="gallery">
             <div class="card" style="width: 18rem;">
                 <!-- <img src="..." class="card-img-top" alt="..."> -->
