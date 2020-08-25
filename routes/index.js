@@ -46,7 +46,7 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
 })
 
 // show challenge overview -> load all possible challenges from the challenge collection
-router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
+router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {   
    pool.query(
       `SELECT * FROM activity`, (err, results) => {
         if (err) {
@@ -64,16 +64,23 @@ router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
 // no matter if current or archived
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
 router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
+
+   //get challenge_id from URL query string
+   const challenge_id = req.query.challengeid
+   const user_id = req.query.userid
+
+   // ORDER BY used to only show most recent challenge
    pool.query(
       `SELECT * 
-      FROM activity 
-         INNER JOIN ua_rel ON aID = aID
-         INNER JOIN eingabe ON uar_ID = uar_ID
-      WHERE id=$1 AND aID=$2
+      FROM activity
+         INNER JOIN ua_rel ON activity.aID = ua_rel.aID
+         LEFT JOIN eingabe ON ua_rel.uar_ID = eingabe.uar_ID
+      WHERE ua_rel.id=$1 AND activity.aID=$2
       ORDER BY date_end DESC`, [user_id, challenge_id], (err, results) => {
         if (err) {
           console.log(err);
         }   
+      console.log(results.rows)
       res.render('challenge-view',
       {
          challenge:results.rows[0],
