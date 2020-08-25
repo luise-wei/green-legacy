@@ -1,0 +1,2 @@
+INSERT INTO activity (aname,goal,unit,abfrage)
+VALUES ('VeggieDay',3,'Tage','Wie oft hast du diese Woche Fleischgerichte zu Mittag gegessen'); 

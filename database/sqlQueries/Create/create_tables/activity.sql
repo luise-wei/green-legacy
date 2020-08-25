@@ -1,6 +1,7 @@
 CREATE TABLE activity (
     aID SERIAL  PRIMARY KEY NOT NULL,
     aname VARCHAR (200) NOT NULL,
-    goal INT NOT NULL, 
+    goal NUMERIC NOT NULL,
+    unit VARCHAR(200) NOT NULL,
     abfrage VARCHAR (500) NOT NULL
 );

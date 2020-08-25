@@ -48,14 +48,26 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
 
 // show challenge overview -> load all possible challenges from the challenge collection
 router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
-   res.render('challenge-overview')
+   pool.query(
+      `SELECT * FROM activity`, (err, results) => {
+        if (err) {
+          console.log(err);
+        }
+      console.log(results.rows)     
+      console.log(req.user)     
+      res.render('challenge-overview',{
+         challenges:results.rows,
+         user:req.user
+      })
+      }
+   )
 })
 
 // show a specific challenge -> ranking, group members, etc.
 // no matter if current or archived
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
 router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
-   res.render('challenge-view',{name:testname})
+   res.render('challenge-view',{name:req.user.name})
 })
 
 // show invite page to share the challenge with friends
@@ -151,6 +163,33 @@ router.post("/register", async (req, res) => {
    failureRedirect: '/login',
    failureFlash: true
    }))
+
+   router.post('/challenge/accept', (req,res)=>{
+      console.log("hit route!")
+      console.log(req.query.userid)
+      console.log(req.query.challengeid)
+
+      const user_id = req.query.userid
+      const challenge_id = req.query.challengeid
+
+      // todo: verify that challenge hasn't already been accepted by the user
+
+      pool.query(
+         `INSERT INTO ua_rel (id, aid, date_start, date_end) 
+            VALUES ($1, $2, (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()+7} / 1000.0)))`,
+               [user_id, challenge_id],
+               (err, results) => {
+                  if (err) {
+                     throw err;
+                  }
+                  req.session.message = {
+                     type: 'success',
+                     message: 'Challenge wurde erfolgreich hinzugefügt!'
+                     }
+                  res.redirect('/challenge-overview')
+               }
+               );
+   })
 
    //redirects user to /dashboard route if he's trying to login again altough he is already logged in.
    function checkAuthenticated(req,res,next){
