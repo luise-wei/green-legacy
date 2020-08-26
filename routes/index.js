@@ -69,6 +69,7 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
    const challenge_id = req.query.challengeid
    const user_id = req.query.userid
 
+
    // ORDER BY used to only show most recent challenge
    pool.query(
       `SELECT * 

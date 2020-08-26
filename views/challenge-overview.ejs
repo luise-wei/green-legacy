@@ -1,6 +1,7 @@
 <div class="display-4 heading">Select your challenge!</div>
 
 
+
 <div>
     <!-- top part -->
     <div class="top-container" style="height: 600px;">
@@ -8,22 +9,26 @@
     <!-- TODO: scrolling trough challenges -->
     <div style="display: flex;flex-direction: column;">
 
-        <div class="gallery">
+        <div class="container-fluid">
+            <div class="row">
             <% challenges.forEach(challenge => { %>
-            <div class="card" style="width: 18rem;">
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <!-- für die Icons könnte auch noch eine Spalte in der DB angelegt werden-->
-                    <h5 class="card-title"> <i class="fas fa-bicycle"></i> <%=challenge.aname%></h5>
-                    <p class="card-text">
-                        Hier könnten wir in der Datenbank noch eine Challenge-Beschreibung einfügen.
-                    </p>
-                    <form action="/challenge/accept?userid=<%=user.id%>&challengeid=<%=challenge.aid%>" method="post">
-                        <input class="btn btn-success" type="submit" name="" value="Challenge wählen" />
-                    </form>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="card">
+                        <!-- <img src="..." class="card-img-top" alt="..."> -->
+                        <div class="card-body">
+                            <!-- für die Icons könnte auch noch eine Spalte in der DB angelegt werden-->
+                            <h5 class="card-title"> <i class="fas fa-bicycle"></i> <%=challenge.aname%></h5>
+                            <p class="card-text">
+                                Hier könnten wir in der Datenbank noch eine Challenge-Beschreibung einfügen.
+                            </p>
+                            <form action="/challenge/accept?userid=<%=user.id%>&challengeid=<%=challenge.aid%>" method="post">
+                                <input class="btn btn-success" type="submit" name="" value="Challenge wählen" />
+                            </form>
+                        </div>
+                    </div>
                 </div>
+            <% }) %>
             </div>
-            <% }) %> 
         </div>
 
         <div class="gallery">
