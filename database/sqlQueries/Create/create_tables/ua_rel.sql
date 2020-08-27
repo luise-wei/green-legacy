@@ -1,6 +1,6 @@
 CREATE TABLE ua_rel (
     uar_ID SERIAL PRIMARY KEY NOT NULL,
-    id INT,
+    ID INT,
     aID INT,
     date_start DATE NOT NULL,
     date_end DATE NOT NULL,

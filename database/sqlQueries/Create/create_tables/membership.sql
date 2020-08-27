@@ -1,6 +1,6 @@
 CREATE TABLE membership (
     gID INT,
-    id INT,
+    ID INT,
     PRIMARY KEY (gID,id),
     FOREIGN KEY (gID) REFERENCES gruppe (gID),
     FOREIGN KEY (id) REFERENCES users (id)
