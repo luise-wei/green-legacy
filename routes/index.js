@@ -9,7 +9,6 @@ const initializePassport = require("../passportConfig")
 
 initializePassport(passport)
 
-
 //pass to every view:
 //is user authenticated or not?
 router.use(function(req,res,next){
@@ -47,14 +46,12 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
 })
 
 // show challenge overview -> load all possible challenges from the challenge collection
-router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
+router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {   
    pool.query(
       `SELECT * FROM activity`, (err, results) => {
         if (err) {
           console.log(err);
         }
-      console.log(results.rows)     
-      console.log(req.user)     
       res.render('challenge-overview',{
          challenges:results.rows,
          user:req.user
@@ -67,7 +64,30 @@ router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
 // no matter if current or archived
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
 router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
-   res.render('challenge-view',{name:req.user.name})
+
+   //get challenge_id from URL query string
+   const challenge_id = req.query.challengeid
+   const user_id = req.query.userid
+
+
+   // ORDER BY used to only show most recent challenge
+   pool.query(
+      `SELECT * 
+      FROM activity
+         INNER JOIN ua_rel ON activity.aID = ua_rel.aID
+         LEFT JOIN eingabe ON ua_rel.uar_ID = eingabe.uar_ID
+      WHERE ua_rel.id=$1 AND activity.aID=$2
+      ORDER BY date_end DESC`, [user_id, challenge_id], (err, results) => {
+        if (err) {
+          console.log(err);
+        }   
+      console.log(results.rows)
+      res.render('challenge-view',
+      {
+         challenge:results.rows[0],
+         user:req.user      
+      })
+   })
 })
 
 // show invite page to share the challenge with friends
@@ -165,31 +185,49 @@ router.post("/register", async (req, res) => {
    }))
 
    router.post('/challenge/accept', (req,res)=>{
-      console.log("hit route!")
-      console.log(req.query.userid)
-      console.log(req.query.challengeid)
-
+      //read id's from url
       const user_id = req.query.userid
       const challenge_id = req.query.challengeid
+      var challenge_duration = 7
 
-      // todo: verify that challenge hasn't already been accepted by the user
 
+      // convert from milliseconds to days
+      challenge_duration *= 1000*60*60*24
+
+      //verify that challenge hasn't already been accepted by the user
       pool.query(
-         `INSERT INTO ua_rel (id, aid, date_start, date_end) 
-            VALUES ($1, $2, (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()+7} / 1000.0)))`,
-               [user_id, challenge_id],
-               (err, results) => {
-                  if (err) {
-                     throw err;
-                  }
-                  req.session.message = {
-                     type: 'success',
-                     message: 'Challenge wurde erfolgreich hinzugefügt!'
-                     }
-                  res.redirect('/challenge-overview')
-               }
-               );
+         `SELECT id, aid, date_end FROM ua_rel
+         WHERE id=$1 AND aid=$2 AND date_end >= NOW()`, [user_id, challenge_id], (err, results) => {
+           if (err) {
+             console.log(err);
+           }
+   
+           if (results.rows.length > 0) {
+             req.session.message = {
+                type: 'warning',
+                message: 'Die Challenge wurde bereits hinzugefügt!'
+                }
+             res.redirect('/challenge-overview')
+            } else {
+               //Add challenge to user (user-activity-relation table)       
+               pool.query(
+                  `INSERT INTO ua_rel (id, aid, date_start, date_end) 
+                     VALUES ($1, $2, (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()+challenge_duration} / 1000.0)))`,
+                        [user_id, challenge_id],
+                        (err, results) => {
+                           if (err) {
+                              throw err;
+                           }
+                           req.session.message = {
+                              type: 'success',
+                              message: 'Challenge wurde erfolgreich hinzugefügt!'
+                              }
+                           res.redirect('/challenge-overview')
+                        })   
+            }
    })
+})
+   
 
    //redirects user to /dashboard route if he's trying to login again altough he is already logged in.
    function checkAuthenticated(req,res,next){
