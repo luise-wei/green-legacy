@@ -47,6 +47,7 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
 
 // show challenge overview -> load all possible challenges from the challenge collection
 router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {   
+
    pool.query(
       `SELECT * FROM activity`, (err, results) => {
         if (err) {
