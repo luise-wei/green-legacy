@@ -1,16 +1,13 @@
 Anfragen für Dashboard (Anmerkung Luise aus Slack vom 20.8.)
 
-<<<<<<< HEAD
 ChallengeOverview
 
 --> Gib für den Nutzer mit der ID x, maximal 6 Challenges zurück, an denen er aktuell nicht teilnimmt.
-=======
 TO DO 1
 alle laufenden Challenges für den Nutzer mit ID XY mit den Informationen: ID, Name, Gruppe, Start und Ende (Das kann dann in einer Art Tabelle oder Liste dem Nutzer angezeigt werden, die ID wird benötigt, damit die Informationen für eine Challenge View entsprechend angefragt werden können)
 
 TO DO 2
 alle vergangenen Challenges für den Nutzer mit ID XY mit den selben Infos wie oben - quasi gleiche Abfrage wie oben.
->>>>>>> 637c950711f8a935ed2616e2a8dbe381ef506cae
 
 SELECT activity.aname, activity.goal, activity.unit
 FROM activity, ua_rel
@@ -29,7 +26,6 @@ ChallengeView
 - evtl. teilnehmende User,
 - Fortschrittseinträge, für Diagramme (uar_ID)
 
-<<<<<<< HEAD
 SELECT gruppe.gname, activity.aname, activity.goal, activity.unit, users.name, ua_rel.uar_ID, SUM(eingabe.eingabe) GROUP BY users.name
 FROM gruppe, activity, users, eingabe, ua_rel
 WHERE ua_rel.ID = users.ID
@@ -123,7 +119,6 @@ AND ua_rel.date_end < GETDATE()
 _______________________________________________________________________________________________________________
 Abfragen zu Screenshots aus Notion
 
-=======
 TO DO 4
 Eingaben, um eine neue Challenge anzulegen:
 Name
@@ -182,4 +177,3 @@ keine
 
 # 10
 keine
->>>>>>> 637c950711f8a935ed2616e2a8dbe381ef506cae

@@ -1,6 +1,6 @@
-<div class="display-4 heading">Select your challenge!</div>
-
-
+<div class="jumbotron text-center">
+  <h2 class="align-middle">Wähle deine nächste Challenge!</h1>
+</div>
 
 <div>
     <!-- top part -->
@@ -17,87 +17,56 @@
                         <!-- <img src="..." class="card-img-top" alt="..."> -->
                         <div class="card-body">
                             <!-- für die Icons könnte auch noch eine Spalte in der DB angelegt werden-->
-                            <h5 class="card-title"> <i class="fas fa-bicycle"></i> <%=challenge.aname%></h5>
+                            <h5 class="card-title"><i class="<%=challenge.icon%>"></i> <%=challenge.aname%></h5>
                             <p class="card-text">
                                 Hier könnten wir in der Datenbank noch eine Challenge-Beschreibung einfügen.
                             </p>
-                            <form action="/challenge/accept?userid=<%=user.id%>&challengeid=<%=challenge.aid%>" method="post">
-                                <input class="btn btn-success" type="submit" name="" value="Challenge wählen" />
-                            </form>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#acceptChallengeModal-id-<%=challenge.aid%>">
+                                Challenge anschauen
+                            </button>
                         </div>
                     </div>
                 </div>
             <% }) %>
             </div>
         </div>
-
-        <div class="gallery">
-            <div class="card" style="width: 18rem;">
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <h5 class="card-title"> <i class="fas fa-bicycle"></i> Challenge</h5>
-                    <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                    </p>
-                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                </div>
-            </div>
-            
-            <div class="card" style="width: 18rem;">
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <h5 class="card-title"> <i class="fas fa-bicycle"></i> Challenge</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                </div>
-            </div>
-            
-            <div class="card" style="width: 18rem;">
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <h5 class="card-title"> <i class="fas fa-bicycle"></i> Challenge</h5>
-                    <!-- alternative icon: <i class="fas fa-hiking"></i> -->
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                </div>
-            </div>
-
-        </div>
-        <div class="gallery">
-            <div class="card" style="width: 18rem;">
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-bicycle"></i> Challenge</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                </div>
-            </div>
-            
-            <div class="card" style="width: 18rem;">
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-bicycle"></i> Challenge</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                </div>
-            </div>
-            
-            <div class="card" style="width: 18rem;">
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-bicycle"></i> Challenge</h5>
-                    <!-- alternative icon: <i class="fas fa-hiking"></i> -->
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="divider"></div>
-    </div>
-    <!-- TODO: Link zu Impressum -->
-    <div height=100px style="text-align: center">Impressum</div>
+  </div>
+  </div>
 </div>
-<div>
+  
+  <!-- Modal -->
+  <% challenges.forEach(challenge => { %>
+    <div class="modal fade" id="acceptChallengeModal-id-<%=challenge.aid%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="exampleModalLabel"><i class="<%=challenge.icon%>"></i> <%=challenge.aname%></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <img src="<%=challenge.image%>"class="img-fluid" alt="Responsive image">
+
+            <p class="font-weight-normal">
+              <br>
+              <%=challenge.infotext%>
+            </p>
+
+            <div class="form-group">
+              <form id="challengeGoal" action="/challenge/accept?userid=<%=user.id%>&challengeid=<%=challenge.aid%>" method="post">
+                <label for="goal"><strong>Ziel:</strong></label>
+                <input type="number" name="challengeGoal" class="form-control" id="goal" aria-describedby="goalHelp" placeholder="<%=challenge.unit%>" min="<%=challenge.mingoal%>" max="<%=challenge.maxgoal%>" required>
+                <small id="goalHelp" class="form-text text-muted">Setze dir selber ein Ziel, dass du erreichen möchtest.</small>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Zurück</button>
+            <button class="btn btn-success" form="challengeGoal" type="submit">Challenge akzeptieren</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% }) %>

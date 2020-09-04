@@ -1,2 +1,5 @@
-INSERT INTO activity (aname,goal,unit,abfrage)
-VALUES ('VeggieDay',3,'Tage','Wie oft hast du diese Woche Fleischgerichte zu Mittag gegessen'); 
+INSERT INTO activity (aname,unit,abfrage,icon,image,infotext,defaultgoal,mingoal,maxgoal)
+VALUES ('VeggieDay','Tage','Wie oft hast du diese Woche Fleischgerichte zu Mittag gegessen?','fas fa-seedling','https://www.vegetariantimes.com/.image/t_share/MTQ3MDM3MzQ5NjA2MzM2NDA3/zi3000-shutterstock-buddha-bowl.jpg','Zu viel Fleisch erhöht laut einer Studie der Harvard School of Public Health das Risiko für Diabetes und Herzkrankheiten. Wer Schinken, Salami und Rindersteaks reichlich zuspricht, erhöht sein Darmkrebsrisiko um rund ein Drittel.',5,1,7); 
+
+INSERT INTO activity (aname,unit,abfrage,icon,image,infotext,defaultgoal,mingoal,maxgoal)
+VALUES ('Vegan Essen','Tage','Wie oft hast du diese Woche Fleischgerichte zu Mittag gegessen?','fas fa-carrot','https://files.albert-schweitzer-stiftung.de/1/obst-gemuese_Serghei-Velusceac-f.jpg','VegetarierInnen und VeganerInnen haben häufig ein geringeres Risiko, an sogenannten Volkskrankheiten wie beispielsweise Typ-2-Diabetes, Herzerkrankungen und Übergewicht zu erkranken – im Gegensatz zu Menschen, die viel Fleisch und Fleischprodukte wie Wurst etc. konsumieren.',3,1,7); 

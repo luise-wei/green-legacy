@@ -61,6 +61,28 @@ router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
    )
 })
 
+//show challenge info
+router.get('/challenge/accept',checkNotAuthenticated, async (req, res) => {
+
+      //get challenge_id from URL query string
+      const challenge_id = req.query.challengeid
+   
+   pool.query(
+      `SELECT * FROM activity`, (err, results) => {
+        if (err) {
+          console.log(err);
+        }
+
+
+      res.render('challenge-accept',{
+         challenge:results.rows,
+         user:req.user
+      })
+      }
+   )
+})
+
+
 // show a specific challenge -> ranking, group members, etc.
 // no matter if current or archived
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
@@ -108,10 +130,10 @@ router.get('/logout', (req,res) => {
 })
 
 
-
 // -----------------
 // -- POST ROUTES --
 // -----------------
+
 
 //Register:
 router.post("/register", async (req, res) => {
@@ -186,11 +208,16 @@ router.post("/register", async (req, res) => {
    }))
 
    router.post('/challenge/accept', (req,res)=>{
+
       //read id's from url
       const user_id = req.query.userid
       const challenge_id = req.query.challengeid
       var challenge_duration = 7
 
+      //read goal from request body
+      let {challengeGoal} = req.body;
+
+      console.log(challengeGoal)
 
       // convert from milliseconds to days
       challenge_duration *= 1000*60*60*24
@@ -212,9 +239,9 @@ router.post("/register", async (req, res) => {
             } else {
                //Add challenge to user (user-activity-relation table)       
                pool.query(
-                  `INSERT INTO ua_rel (id, aid, date_start, date_end) 
-                     VALUES ($1, $2, (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()+challenge_duration} / 1000.0)))`,
-                        [user_id, challenge_id],
+                  `INSERT INTO ua_rel (id, aid, goal, date_start, date_end) 
+                     VALUES ($1, $2, $3, (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()+challenge_duration} / 1000.0)))`,
+                        [user_id, challenge_id, challengeGoal],
                         (err, results) => {
                            if (err) {
                               throw err;
