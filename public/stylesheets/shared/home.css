@@ -30,6 +30,27 @@
   font-size:30px;
 }
 
+.text{
+  /* display:flex;
+  justify-content:center; */
+
+  padding-top:40px;
+  padding-bottom:40px;
+  font-size:20px;
+
+  align-items: center; 
+  width: 75%; 
+  margin: auto;
+}
+
+.carousel-inner img {
+  margin: auto;
+}
+
+.carousel-inner div {
+  text-align: center;
+}
+
 .gallery{
   display:flex;
   flex-direction:row;

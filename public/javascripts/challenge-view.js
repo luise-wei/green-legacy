@@ -1,11 +1,36 @@
-// // Userlist data array for filling in info box
-// var userListData = [];
+// supposed to be clean opening of JSON files according to : 
+function loadJSON(callback) {   
+  var xobj = new XMLHttpRequest();
+      xobj.overrideMimeType("application/json");
+  xobj.open('GET', 'stylesheets/users.json', true);
+  xobj.onreadystatechange = function () {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+          // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+          callback(xobj.responseText);
+        }
+  };
+  xobj.send(null);  
+}
+
+function init() {
+  loadJSON(function(response) {
+   // Parsing JSON string into object
+     var user = JSON.parse(response);
+     console.log("loaded JSON: \n", eingabe);
+    //  $("table").bootstrapTable();
+     var table = $('#table').bootstrapTable({data: user});
+     table.ajax.reload();
+  });
+}
+ 
+
+
 
 // DOM Ready =============================================================
 $(document).ready(function() {
 
   // Populate the user table on initial page load
-  console.log("Hey das Dokument wurde geladen! :) ")
+  console.log("Challenge View wurde geladen! :) ")
   populateChart();
 });
 

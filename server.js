@@ -60,5 +60,5 @@ app.use((req, res, next)=>{
 app.use('/', indexRouter)
 
 app.listen(PORT,()=>{
-   console.log(`Server running on port ${PORT}`)
+   console.log(`Server running on port ${PORT}`, process.env.SECRET)
 })

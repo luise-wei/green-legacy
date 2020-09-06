@@ -4,6 +4,7 @@ const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcrypt')
 const { pool } = require('../database/dbConfig')
+const DATE_FORMATER = require( 'dateformat' );
 
 const initializePassport = require("../passportConfig")
 
@@ -42,7 +43,39 @@ router.get('/register',checkAuthenticated, async (req, res) => {
 
 // show user's dashboard with current and archived challenges
 router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
-   res.render('dashboard',{name:req.user.name})
+
+   // TODO: request all current and past challenges of the current user
+   result = {  current:[
+                  {        
+                     challengeid: 3,
+                     challengeName: "VeggieDay",
+                     startDate: DATE_FORMATER( new Date(), "2020-09-4"),
+                     endDate: DATE_FORMATER( new Date(), "2020-09-11"),
+                     goal: 4,
+                  },  
+                  {        
+                     challengeid: 2,
+                     challengeName: "RideBike",
+                     startDate: DATE_FORMATER( new Date(), "2020-09-6"),
+                     endDate: DATE_FORMATER( new Date(), "2020-09-13"),
+                     goal: 1,
+                  }           
+               ],
+               past:[
+                  {   
+                     challengeid: 1,     
+                     challengeName: "VeggieDay",
+                     startDate: DATE_FORMATER( new Date(), "2020-08-4"),
+                     endDate: DATE_FORMATER( new Date(), "2020-08-11"),
+                     goal: 3,
+                  } 
+               ],
+               user:req.user 
+            }
+
+   res.render('dashboard',{name:req.user.name, result:result})
+
+   // TODO: if click on "to challenge" the app is redirected to the specific challenge-view
 })
 
 // show challenge overview -> load all possible challenges from the challenge collection
@@ -88,29 +121,62 @@ router.get('/challenge/accept',checkNotAuthenticated, async (req, res) => {
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
 router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
 
-   //get challenge_id from URL query string
-   const challenge_id = req.query.challengeid
-   const user_id = req.query.userid
+   result = {  challenge:[
+                  {        
+                     challengeid: 3,
+                     challengeName: "VeggieDay",
+                     startDate: DATE_FORMATER( new Date(), "2020-09-4"),
+                     endDate: DATE_FORMATER( new Date(), "2020-09-11"),
+                     goal: 4,
+                  }          
+               ],
+               entries:[
+                  {   
+                     date: DATE_FORMATER( new Date(), "2020-09-04"),
+                     value: 1,
+                  }, 
+                  {   
+                     date: DATE_FORMATER( new Date(), "2020-09-06"),
+                     value: 1,
+                  }, 
+                  {   
+                     date: DATE_FORMATER( new Date(), "2020-09-09"),
+                     value: 1,
+                  } 
+               ],
+               user:req.user 
+   }
 
-
-   // ORDER BY used to only show most recent challenge
-   pool.query(
-      `SELECT * 
-      FROM activity
-         INNER JOIN ua_rel ON activity.aID = ua_rel.aID
-         LEFT JOIN eingabe ON ua_rel.uar_ID = eingabe.uar_ID
-      WHERE ua_rel.id=$1 AND activity.aID=$2
-      ORDER BY date_end DESC`, [user_id, challenge_id], (err, results) => {
-        if (err) {
-          console.log(err);
-        }   
-      console.log(results.rows)
-      res.render('challenge-view',
-      {
-         challenge:results.rows[0],
-         user:req.user      
-      })
+   res.render('challenge-view',{
+      challenge:result,
+      user:req.user
    })
+
+
+   // TODO: if relsuts is empty results.row throws an error!
+   // //get challenge_id from URL query string
+   // const challenge_id = req.query.challengeid
+   // const user_id = req.query.userid
+
+
+   // // ORDER BY used to only show most recent challenge
+   // pool.query(
+   //    `SELECT * 
+   //    FROM activity
+   //       INNER JOIN ua_rel ON activity.aID = ua_rel.aID
+   //       LEFT JOIN eingabe ON ua_rel.uar_ID = eingabe.uar_ID
+   //    WHERE ua_rel.id=$1 AND activity.aID=$2
+   //    ORDER BY date_end DESC`, [user_id, challenge_id], (err, results) => {
+   //      if (err) {
+   //        console.log(err);
+   //      }   
+   //    console.log(results.rows)
+   //    res.render('challenge-view',
+   //    {
+   //       challenge:results.rows[0],
+   //       user:req.user      
+   //    })
+   // })
 })
 
 // show invite page to share the challenge with friends
@@ -134,77 +200,90 @@ router.get('/logout', (req,res) => {
 // -- POST ROUTES --
 // -----------------
 
+// // show specific challenge 
+// router.post('/dashboard', checkAuthenticated, (req, res)=>{
+//    console.log("post income")
+//    // TODO: take selected Challenge id from request
+//    // redirect to specific challenge-view 
+//    res.redirect('/challenge-view')
+// })
+
+// // go back to dashboard
+// router.post('/challenge-overview', checkAuthenticated, (req, res)=>{
+//    // redirect to dashboard 
+//    res.redirect('/dashboard')
+// })
 
 //Register:
-router.post("/register", async (req, res) => {
-   let { name, email, password, passwordControl } = req.body;
- 
-   if (!name || !email || !password || !passwordControl) {
-      req.session.message = {
-         type: 'warning',
-         message: 'Bitte alle Felder ausfüllen!'
-         }
-      res.redirect('/register')
-   }
- 
-   else if (password.length < 6) {
-      req.session.message = {
-         type: 'warning',
-         message: 'Das Passwort ist zu kurz!'
-         }
-      res.redirect('/register')
-   }
- 
-   else if (password !== passwordControl) {
-      req.session.message = {
-         type: 'warning',
-         message: 'Die Passwörter stimmen nicht überein!'
-         }
-      res.redirect('/register')
-   }
- 
-   else {
-      hashedPassword = await bcrypt.hash(password, 10);
-      // Validation passed
-      pool.query(
-        `SELECT * FROM users WHERE email = $1`, [email], (err, results) => {
-          if (err) {
-            console.log(err);
-          }
-  
-          if (results.rows.length > 0) {
-            req.session.message = {
-               type: 'warning',
-               message: 'Die EMail-Adresse ist bereits registriert!'
-               }
-            res.redirect('/register')
-          } else {
-               pool.query(
-               `INSERT INTO users (name, email, password)
-                     VALUES ($1, $2, $3)
-                     RETURNING id, password`,
-               [name, email, hashedPassword],
-               (err, results) => {
-                  if (err) {
-                     throw err;
-                  }
-                  req.session.message = {
-                     type: 'success',
-                     message: 'Account wurde erfolgreich registriert!'
-                     }
-                  res.redirect('/login')
-               }
-               );
-          }
-        }
-      );
-    }
-  });
+   router.post("/register", async (req, res) => {
+      let { name, email, password, passwordControl } = req.body;
 
-  router.post("/login",passport.authenticate('local',{
-   successRedirect: '/dashboard',
-   failureRedirect: '/login',
-   failureFlash: true
+      if (!name || !email || !password || !passwordControl) {
+         req.session.message = {
+            type: 'warning',
+            message: 'Bitte alle Felder ausfüllen!'
+            }
+         res.redirect('/register')
+      }
+
+      else if (password.length < 6) {
+         req.session.message = {
+            type: 'warning',
+            message: 'Das Passwort ist zu kurz!'
+            }
+         res.redirect('/register')
+      }
+
+      else if (password !== passwordControl) {
+         req.session.message = {
+            type: 'warning',
+            message: 'Die Passwörter stimmen nicht überein!'
+            }
+         res.redirect('/register')
+      }
+
+      else {
+         hashedPassword = await bcrypt.hash(password, 10);
+         // Validation passed
+         pool.query(
+         `SELECT * FROM users WHERE email = $1`, [email], (err, results) => {
+            if (err) {
+               console.log(err);
+            }
+
+            if (results.rows.length > 0) {
+               req.session.message = {
+                  type: 'warning',
+                  message: 'Die EMail-Adresse ist bereits registriert!'
+                  }
+               res.redirect('/register')
+            } else {
+                  pool.query(
+                  `INSERT INTO users (name, email, password)
+                        VALUES ($1, $2, $3)
+                        RETURNING id, password`,
+                  [name, email, hashedPassword],
+                  (err, results) => {
+                     if (err) {
+                        throw err;
+                     }
+                     req.session.message = {
+                        type: 'success',
+                        message: 'Account wurde erfolgreich registriert!'
+                        }
+                     res.redirect('/login')
+                  }
+                  );
+            }
+         }
+         );
+      }
+   });
+
+   router.post("/login",passport.authenticate('local',{
+      successRedirect: '/dashboard',
+      failureRedirect: '/login',
+      failureFlash: true
    }))
 
    router.post('/challenge/accept', (req,res)=>{
@@ -226,16 +305,16 @@ router.post("/register", async (req, res) => {
       pool.query(
          `SELECT id, aid, date_end FROM ua_rel
          WHERE id=$1 AND aid=$2 AND date_end >= NOW()`, [user_id, challenge_id], (err, results) => {
-           if (err) {
-             console.log(err);
-           }
-   
-           if (results.rows.length > 0) {
-             req.session.message = {
-                type: 'warning',
-                message: 'Die Challenge wurde bereits hinzugefügt!'
-                }
-             res.redirect('/challenge-overview')
+            if (err) {
+               console.log(err);
+            }
+
+            if (results.rows.length > 0) {
+               req.session.message = {
+                  type: 'warning',
+                  message: 'Die Challenge wurde bereits hinzugefügt!'
+                  }
+               res.redirect('/challenge-overview')
             } else {
                //Add challenge to user (user-activity-relation table)       
                pool.query(
@@ -254,6 +333,7 @@ router.post("/register", async (req, res) => {
                         })   
             }
    })
+
 })
    
 
