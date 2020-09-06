@@ -55,6 +55,10 @@
             </p>
 
             <div class="form-group">
+              <div class="container">
+                Start Date: <input id="startDate" width="276" />
+                End Date: <input id="endDate" width="276" />
+              </div>
               <form id="challengeGoal-id-<%=challenge.aid%>" action="/challenge/accept?userid=<%=user.id%>&challengeid=<%=challenge.aid%>" method="post">
                 <label for="goal"><strong>Ziel:</strong></label>
                 <input type="number" name="challengeGoal" class="form-control" id="goal" aria-describedby="goalHelp" placeholder="<%=challenge.unit%>" min="<%=challenge.mingoal%>" max="<%=challenge.maxgoal%>" required>
@@ -70,3 +74,6 @@
       </div>
     </div>
   <% }) %>
+
+  <script>var abc= JSON.parse('<%- challenges %>');</script>
+

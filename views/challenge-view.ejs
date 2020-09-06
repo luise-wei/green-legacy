@@ -1,6 +1,7 @@
 <div style="display: grid;">
-    <h1 class="display-4 heading" style="grid-column-start: 1; grid-column-end: 5;">Dein Fortschritt in der Challenge <i> <%= challenge.challenge[0].challengeName %>  </i> </h1>
-    <button type="submit" class="btn btn-secondary" style="height: 20%; grid-column: 6;"> Zurück zur Übersicht</button>
+    <h1 class="display-4 heading" style="grid-column-start: 1; grid-column-end: 5;">Dein Fortschritt in der Challenge
+        &nbsp<strong> <%= challenge.challenge[0].challengeName %> </strong> </h1>
+    <a href="/dashboard" class="btn btn-secondary" style="height: 20%; grid-column: 6;"> Zurück zur Übersicht</a>
 </div>    
 
 <div class="container" >
