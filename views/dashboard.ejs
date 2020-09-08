@@ -4,6 +4,34 @@
   </h5>    
 </div>
 
+<div></div>
+        <div class="gallery" style="padding-left: 20%; padding-right: 20%;">
+            <div class="card" style="width: 18rem; background-color: var(--decent-green)"> 
+                <div class="card-body">
+                    <h5 class="card-title"  style="text-align: center;"> <i class="far fa-check-square"> </i> Gelöste Challenges</h5>
+                    <p class="card-text" style="text-align: center;"><%= result.past.length %></p>
+                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                </div>
+            </div>
+            
+            <div class="card" style="width: 18rem; background-color: var(--decent-green);">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-align: center;"> <i class="fa fa-arrow-circle-o-down" aria-hidden="true"> </i> Eingespartes CO2</h5>
+                    <p class="card-text" style="text-align: center;"><%= result.savedCO2 %> t</p>
+                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                </div>
+            </div>
+            
+            <div class="card" style="width: 18rem; background-color: var(--decent-green);">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-align: center;"> <i class="far fa-heart"> </i> Lieblingschallenge</h5>
+                    <p class="card-text" style="text-align: center;"><%= result.favourite.challengeName %></p>
+                </div>
+            </div>
+        </div>
+       
+</div>
+
 <!-- IDEA: only show in the first login situation -->
 <!-- <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
@@ -20,7 +48,11 @@
 
 <div>
   <div class="container" >
+<<<<<<< HEAD
     <a class="display-4" style="font-size: 20px;">Laufende Challenges (<%=result.current.length%>/5) </a>
+=======
+    <a class="display-4" style="font-size: 20px;">Laufende Challenges (<%= result.current.length %>) </a>
+>>>>>>> bb004abf4039e9a095f5e0b2cc3f07f9584664d6
     <table class="table table-striped table-bordered">
       <thead class="thead-dark">
         <tr>
@@ -53,7 +85,11 @@
   </div>
       
   <div class="container">
+<<<<<<< HEAD
     <a class="display-4" style="font-size: 20px;">Vergangene Challenges (<%=result.past.length%>)</a>
+=======
+    <a class="display-4" style="font-size: 20px;">Vergangene Challenges (<%= result.past.length %>)</a>
+>>>>>>> bb004abf4039e9a095f5e0b2cc3f07f9584664d6
     <table class="table table-striped table-bordered">
       <thead class="thead-dark">
         <tr>
