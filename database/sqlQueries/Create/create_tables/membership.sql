@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS membership CASCADE;
 CREATE TABLE membership (
     gID INT,
     ID INT,

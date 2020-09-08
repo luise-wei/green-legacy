@@ -1,10 +1,9 @@
-CREATE TABLE ua_rel (
-    uar_ID SERIAL PRIMARY KEY NOT NULL,
-    ID INT,
-    aID INT,
+DROP TABLE IF EXISTS uc_rel CASCADE;
+CREATE TABLE uc_rel (
+    ucr_ID SERIAL PRIMARY KEY NOT NULL,
+    uID INT,
+    cID INT,
     goal NUMERIC,
-    date_start DATE NOT NULL,
-    date_end DATE NOT NULL,
-    FOREIGN KEY (aID) REFERENCES activity (aID),
-    FOREIGN KEY (id) REFERENCES users (id)
+    FOREIGN KEY (aID) REFERENCES challenge (cID),
+    FOREIGN KEY (uId) REFERENCES users (uId)
 );
