@@ -70,6 +70,11 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
                      goal: 3,
                   } 
                ],
+               favourite: { 
+                  challengeid: 1,     
+                  challengeName: "VeggieDay"
+               },
+               savedCO2: 20,
                user:req.user 
             }
 
@@ -121,15 +126,21 @@ router.get('/challenge/accept',checkNotAuthenticated, async (req, res) => {
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
 router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
 
-   result = {  challenge:[
-                  {        
+   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+   const start = new Date("2020-09-4")
+   const end = new Date("2020-09-11")
+   const today = new Date()
+   const diffTime = Math.abs(end - today);
+   const difference = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+   result = {  info:{        
                      challengeid: 3,
                      challengeName: "VeggieDay",
-                     startDate: DATE_FORMATER( new Date(), "2020-09-4"),
-                     endDate: DATE_FORMATER( new Date(), "2020-09-11"),
+                     startDate:  start.toLocaleDateString("en-GB"),
+                     endDate: end.toLocaleDateString("en-GB"),
+                     unit: "Tage",
                      goal: 4,
-                  }          
-               ],
+                     daysLeft: difference,
+               },
                entries:[
                   {   
                      date: DATE_FORMATER( new Date(), "2020-09-04"),
@@ -144,6 +155,10 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
                      value: 1,
                   } 
                ],
+               progress: {
+                  sum: 3, // sum of all values in entries
+                  percentage: 100 * 3/4 // progress in percent   
+               },
                user:req.user 
    }
 
@@ -151,7 +166,6 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
       challenge:result,
       user:req.user
    })
-
 
    // TODO: if relsuts is empty results.row throws an error!
    // //get challenge_id from URL query string
@@ -178,6 +192,44 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
    //    })
    // })
 })
+
+// to load data for charts
+router.get('/challenge-view/data', async (req, res) => {
+   console.log("got data request for a challenge")
+   const date1 = new Date("2020-09-04")
+   const date2 = new Date("2020-09-06")
+   const date3 = new Date("2020-09-09")
+   const end = new Date("2020-09-11")
+   const result = {  entries:[
+                  {   
+                     x: date1, // date of the entry
+                     y: 1, // value of the entry - one day
+                  }, 
+                  {   
+                     x: date2,
+                     y: 1,
+                  }, 
+                  {   
+                     x: date3,
+                     y: 1,
+                  } 
+               ],
+               progress: [
+                  {
+                     
+                  }
+               ],
+               goal: {
+                  endDate:end,
+                  value: 4
+               }, 
+               user:req.user 
+   }
+
+   res.send(result)
+})
+
+
 
 // show invite page to share the challenge with friends
 // TODO: when do we create a noe challenge in the data base
