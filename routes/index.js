@@ -261,7 +261,7 @@ router.get('/logout', (req,res) => {
                   pool.query(
                   `INSERT INTO users (name, email, password)
                         VALUES ($1, $2, $3)
-                        RETURNING id, password`,
+                        RETURNING uid, password`,
                   [name, email, hashedPassword],
                   (err, results) => {
                      if (err) {
@@ -303,8 +303,8 @@ router.get('/logout', (req,res) => {
 
       //verify that challenge hasn't already been accepted by the user
       pool.query(
-         `SELECT id, aid, date_end FROM ua_rel
-         WHERE id=$1 AND aid=$2 AND date_end >= NOW()`, [user_id, challenge_id], (err, results) => {
+         `SELECT uid, cid, date_end FROM uc_rel
+         WHERE uid=$1 AND aid=$2 AND date_end >= NOW()`, [user_id, challenge_id], (err, results) => {
             if (err) {
                console.log(err);
             }
@@ -318,7 +318,7 @@ router.get('/logout', (req,res) => {
             } else {
                //Add challenge to user (user-activity-relation table)       
                pool.query(
-                  `INSERT INTO ua_rel (id, aid, goal, date_start, date_end) 
+                  `INSERT INTO uc_rel (uid, aid, goal, date_start, date_end) 
                      VALUES ($1, $2, $3, (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()+challenge_duration} / 1000.0)))`,
                         [user_id, challenge_id, challengeGoal],
                         (err, results) => {
