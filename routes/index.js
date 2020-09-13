@@ -5,6 +5,7 @@ const passport = require('passport')
 const bcrypt = require('bcrypt')
 const { pool } = require('../database/dbConfig')
 const DATE_FORMATER = require( 'dateformat' );
+const dbQuery = require('../database/models/Challenges.js')
 
 const initializePassport = require("../passportConfig")
 
@@ -89,40 +90,13 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
 // show challenge overview -> load all possible challenges from the challenge collection
 router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {   
 
-   pool.query(
-      `SELECT * FROM activity`, (err, results) => {
-        if (err) {
-          console.log(err);
-        }
-      res.render('challenge-overview',{
-         challenges:results.rows,
-         user:req.user
-      })
-      }
-   )
+   var challenges = await dbQuery.getChallengesForChallengeOverview()
+
+   res.render('challenge-overview',{
+      challenges:challenges,
+      user:req.user
+   })
 })
-
-//show challenge info
-router.get('/challenge/accept',checkNotAuthenticated, async (req, res) => {
-
-      //get challenge_id from URL query string
-      const challenge_id = req.query.challengeid
-   
-   pool.query(
-      `SELECT * FROM activity`, (err, results) => {
-        if (err) {
-          console.log(err);
-        }
-
-
-      res.render('challenge-accept',{
-         challenge:results.rows,
-         user:req.user
-      })
-      }
-   )
-})
-
 
 // show a specific challenge -> ranking, group members, etc.
 // no matter if current or archived
