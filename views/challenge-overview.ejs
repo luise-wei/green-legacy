@@ -19,7 +19,7 @@
                             <!-- für die Icons könnte auch noch eine Spalte in der DB angelegt werden-->
                             <h5 class="card-title"><i class="<%=challenge.icon%>"></i> <%=challenge.aname%></h5>
                             <p class="card-text">
-                                Hier könnten wir in der Datenbank noch eine Challenge-Beschreibung einfügen.
+                              <%=challenge.shortinfotext%>
                             </p>
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#acceptChallengeModal-id-<%=challenge.aid%>">
                                 Challenge anschauen
@@ -49,15 +49,14 @@
 
             <img src="<%=challenge.image%>"class="img-fluid" alt="Responsive image">
 
-            <p class="font-weight-normal">
+            <p class="font-weight-normal">  
               <br>
               <%=challenge.infotext%>
             </p>
 
             <div class="form-group">
               <div class="container">
-                Start Date: <input id="startDate" width="276" />
-                End Date: <input id="endDate" width="276" />
+                <!-- Hier StartDate und EndDate einfügen -->
               </div>
               <form id="challengeGoal-id-<%=challenge.aid%>" action="/challenge/accept?userid=<%=user.id%>&challengeid=<%=challenge.aid%>" method="post">
                 <label for="goal"><strong>Ziel:</strong></label>
