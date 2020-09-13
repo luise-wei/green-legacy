@@ -12,28 +12,62 @@
         &nbsp; &nbsp; NOCH <%= challenge.info.daysLeft %> Tage
     </div>
 
-    <a class="display-4" style="font-size: 20px;">Deine Eingaben</a>
-    <table class="table table-striped table-bordered">
-      <thead class="thead-dark">
-        <tr>
-          <th>Datum der Eingabe</th>
-          <th>Wert</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for (var i = 0; i < challenge.entries.length;  i++) { %>
-        <tr>
-          <td><%= challenge.entries[i].date %></td>
-          <td><%= challenge.entries[i].value %></td>
-        </tr>    
-        <% } %>
-        <!-- final row -->
-        <tr>
-            <td><%= challenge.entries.length %> Einträge</td>
-            <td><%= challenge.progress.sum %> <%= challenge.info.unit %></td> 
-          </tr> 
-      </tbody>
-    </table>
+    <div style="padding-top: 20px; padding-bottom: 20px;">
+        <a class="display-4" style="font-size: 20px;">Deine Eingaben</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered" id="table">
+        <thead class="thead-dark">
+            <tr>
+                <th style="display: none;">#</th>
+                <th>Datum der Eingabe</th>
+                <th>Wert [Tage]</th>
+                <!-- <th class="col-1">Ändern</th>
+                <th class="col-1">Löschen</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <% for (var i = 0; i < challenge.entries.length;  i++) { %>
+            <tr>
+                <th scope="row" style="display: none;"><%= i %></th>
+                <!-- <td class="col-5"><%= challenge.entries[i].date %></td> -->
+                <td class="tabledit-view-mode" style="cursor: pointer;">
+                    <span class="tabledit-span"><%= challenge.entries[i].date %></span>
+                    <!-- TODO: Add Dtaepicker as input -->
+                    <input class="tabledit-input form-control input-sm" type="date" name="date" value="0" style="display: none;" disabled="">
+                </td>
+
+                <!-- <td class="col-5 tabledit-view-mode" style="cursor: pointer;"><%= challenge.entries[i].value %></td> -->
+
+                <td class="tabledit-view-mode" style="cursor: pointer;">
+                    <span class="tabledit-span"><%= challenge.entries[i].value %></span>
+                    <input class="tabledit-input form-control input-sm" type="number" name="value" value="0" style="display: none;" disabled="">
+                </td>
+
+                <!-- <td class="col-1"> <button type="button" class="btn btn-secondary btn-rounded btn-sm my-0"><i class="fas fa-pencil-alt"></i> </button></td>
+                <td class="col-1">
+                    <span class="table-remove"><button type="button"
+                        class="btn btn-danger btn-rounded btn-sm my-0">Remove</button>
+                    </span>
+                </td> -->
+            </tr>  
+            <% } %>
+        </tbody>
+        <!-- TODO: Make summary row unaditable -->
+        <!-- <tfoot>
+            <tr>
+                <th scope="row" style="display: none;"><%= i %></th>
+                <td><%= challenge.entries.length %> Einträge</td>
+                <td><%= challenge.progress.sum %> <%= challenge.info.unit %></td> 
+            </tr> 
+        </tfoot> -->
+        </table>
+    </div>
+    
+    <div style="text-align: right;">
+        <button class="btn btn-primary table-add" id="add" data-toggle="modal" data-target="#newEntryModal-id-<%=challenge.info.challengeid%>">Eintrag hinzufügen</button>
+    </div>
 
     <!-- <div class="divider"></div> -->
 
@@ -73,7 +107,7 @@
                         <div class="container">
                             <div class="row my-3">
                                 <div class="col">
-                                    <h4>Bootstrap 4 Chart.js - Line Chart</h4>
+                                    <h4>Eintragungen</h4>
                                 </div>
                             </div>
                             <div class="row my-2">
@@ -91,7 +125,7 @@
                         <div class="container">
                             <div class="row my-3">
                                 <div class="col">
-                                    <h4>Bootstrap 4 Chart.js - Line Chart</h4>
+                                    <h4>Fortschritt</h4>
                                 </div>
                             </div>
                             <div class="row my-2">
@@ -109,7 +143,7 @@
                         <div class="container">
                             <div class="row my-3">
                                 <div class="col">
-                                    <h4>Bootstrap 4 Chart.js - Bar Chart</h4>
+                                    <h4>Aktivität</h4>
                                 </div>
                             </div>
                             <div class="row my-2">
@@ -138,3 +172,50 @@
 <div class="bottom-container">
     <div height=100px style="text-align: center">Impressum</div>
 </div>
+
+
+<!-- Add Entry - Modal -->
+<div class="modal fade" id="newEntryModal-id-<%=challenge.info.challengeid%>" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="addModalLabel"> Neuer Eintrag für <%=challenge.info.challengeName%></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- <img src="<%=challenge.image%>"class="img-fluid" alt="Responsive image"> -->
+
+          <!-- <p class="font-weight-normal">
+            <br>
+            <%=challenge.infotext%>
+          </p> -->
+
+          <div class="form-group">
+            <form id="challengeEntry-id-<%=challenge.info.challengeid%>" action="/challenge-view/entry?userid=<%=user.uid%>&challengeid=<%=challenge.info.challengeid%>" method="post">
+                
+                <div class="form-group input-group date" data-provide="datepicker-inline">
+                    <input type="text" class="form-control datepicker" name="date"  data-date-format="dd/mm/yyyy">
+                    <div class="input-group-addon">
+                        <span class="fas fa-calendar input-prefix"></span>
+                    </div>
+                </div>    
+                <div class="form-group">
+                    <label for="goal"><strong>Eintrag:</strong></label>
+                    <!-- TODO: make input variable - according to input type of challenge -->
+                    <input type="number" class="form-control" name="entry" id="entry" aria-describedby="entryHelp" placeholder="z.B. 1" min="1" max="1" required>
+                    <small id="entryHelp" class="form-text text-muted">Gib deinen Fortschritt in [<%=challenge.info.unit%>] an.</small>
+                </div>
+                
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Zurück</button>
+          <button class="btn btn-success" form="challengeEntry-id-<%=challenge.info.challengeid%>" type="submit">Eintrag hinzufügen</button>
+        </div>
+      </div>
+    </div>
+  </div>

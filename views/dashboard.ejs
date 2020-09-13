@@ -1,4 +1,4 @@
-<div class="jumbotron">
+<div class="jumbotron" style="padding:25px;">
   <h5>
     Hallo <strong><%= name %></strong>! Das ist deine Übersicht über aktuelle und vergangene Challenges.
   </h5>    
@@ -16,8 +16,8 @@
             
             <div class="card" style="width: 18rem; background-color: var(--decent-green);">
                 <div class="card-body">
-                    <h5 class="card-title" style="text-align: center;"> <i class="fa fa-arrow-circle-o-down" aria-hidden="true"> </i> Eingespartes CO2</h5>
-                    <p class="card-text" style="text-align: center;"><%= result.savedCO2 %> t</p>
+                    <h5 class="card-title" style="text-align: center;"> <i class="fa fa-arrow-circle-o-down" aria-hidden="true"> </i> Eingespartes CO <sub>2</sub></h5>
+                    <p class="card-text" style="text-align: center;"><%= result.savedCO2 %> kg</p>
                     <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                 </div>
             </div>
@@ -66,7 +66,7 @@
       <tbody>
         <% for (var i = 0; i < result.current.length;  i++) { %>
         <tr>
-          <td><%= result.current[i].challengeName %></td>
+          <td><i class="<%=result.current[i].icon%>"></i> <%= result.current[i].challengeName %></td>
           <td><%= result.current[i].goal %></td>
           <td><%= result.current[i].startDate %></td>
           <td><%= result.current[i].endDate %></td>

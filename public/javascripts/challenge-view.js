@@ -17,6 +17,20 @@ function loadData(){
 
 }
 
+
+function add(){
+  console.log("add clicked")
+}
+
+function initDatepicker(){
+  var datepicker = $('.datepicker')
+
+  datepicker.datepicker({
+    format: 'dd/mm/yyyy'
+  })
+  datepicker.datepicker("setDate", new Date());
+}
+
 // DOM Ready =============================================================
 $(document).ready(function() {
 
@@ -27,6 +41,33 @@ $(document).ready(function() {
 
 
   loadData()
+
+  initDatepicker();
+
+  // listen for edits in table
+  $('#table').Tabledit({
+    url: '/challenge-view/data',
+    editButton: true,
+    deleteButton: true,
+    hideIdentifier: true,
+    buttons: {
+      edit: {
+          class: 'btn btn-sm btn-success',
+          html: '<span class="fas fa-pencil-alt"></span>',
+          action: 'edit'
+      },
+      delete:{
+          class: 'btn btn-sm btn-danger',
+          html: '<span class="fas fa-trash"></span>',
+          action: 'delete'
+      }
+    },
+    columns: {
+      identifier: [0, 'id'],
+      editable: [[1, 'date'], [2, 'value']]
+    }
+    });
+
 });
 
 // fill and create chart
