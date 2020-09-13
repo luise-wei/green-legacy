@@ -49,16 +49,18 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
                   {        
                      challengeid: 3,
                      challengeName: "VeggieDay",
-                     startDate: DATE_FORMATER( new Date(), "2020-09-4"),
-                     endDate: DATE_FORMATER( new Date(), "2020-09-11"),
+                     startDate: DATE_FORMATER( new Date(), "2020-09-9"),
+                     endDate: DATE_FORMATER( new Date(), "2020-09-16"),
                      goal: 4,
+                     icon:"fas fa-carrot"
                   },  
                   {        
                      challengeid: 2,
                      challengeName: "RideBike",
                      startDate: DATE_FORMATER( new Date(), "2020-09-6"),
                      endDate: DATE_FORMATER( new Date(), "2020-09-13"),
-                     goal: 1,
+                     goal: 1,                     
+                     icon:"fas fa-bicycle"
                   }           
                ],
                past:[
@@ -67,14 +69,15 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
                      challengeName: "VeggieDay",
                      startDate: DATE_FORMATER( new Date(), "2020-08-4"),
                      endDate: DATE_FORMATER( new Date(), "2020-08-11"),
-                     goal: 3,
+                     goal: 3,                     
+                     icon:"fas fa-carrot"
                   } 
                ],
                favourite: { 
                   challengeid: 1,     
                   challengeName: "VeggieDay"
                },
-               savedCO2: 20,
+               savedCO2: 12,
                user:req.user 
             }
 
@@ -127,8 +130,8 @@ router.get('/challenge/accept',checkNotAuthenticated, async (req, res) => {
 router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
 
    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-   const start = new Date("2020-09-4")
-   const end = new Date("2020-09-11")
+   const start = new Date("2020-09-9")
+   const end = new Date("2020-09-16")
    const today = new Date()
    const diffTime = Math.abs(end - today);
    const difference = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
@@ -140,18 +143,19 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
                      unit: "Tage",
                      goal: 4,
                      daysLeft: difference,
+                     icon:"fas fa-carrot"
                },
                entries:[
                   {   
-                     date: DATE_FORMATER( new Date(), "2020-09-04"),
-                     value: 1,
-                  }, 
-                  {   
-                     date: DATE_FORMATER( new Date(), "2020-09-06"),
-                     value: 1,
-                  }, 
-                  {   
                      date: DATE_FORMATER( new Date(), "2020-09-09"),
+                     value: 1,
+                  }, 
+                  {   
+                     date: DATE_FORMATER( new Date(), "2020-09-11"),
+                     value: 1,
+                  }, 
+                  {   
+                     date: DATE_FORMATER( new Date(), "2020-09-12"),
                      value: 1,
                   } 
                ],
@@ -196,10 +200,10 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
 // to load data for charts
 router.get('/challenge-view/data', async (req, res) => {
    console.log("got data request for a challenge")
-   const date1 = new Date("2020-09-04")
-   const date2 = new Date("2020-09-06")
-   const date3 = new Date("2020-09-09")
-   const end = new Date("2020-09-11")
+   const date1 = new Date("2020-09-09")
+   const date2 = new Date("2020-09-11")
+   const date3 = new Date("2020-09-12")
+   const end = new Date("2020-09-16")
    const result = {  entries:[
                   {   
                      x: date1, // date of the entry
@@ -384,10 +388,47 @@ router.get('/logout', (req,res) => {
                            res.redirect('/challenge-overview')
                         })   
             }
+      })
+
    })
 
-})
-   
+
+   // add new entry
+   router.post('/challenge-view/entry', (req,res)=>{
+
+      //read id's from url
+      const user_id = req.query.userid
+      const challenge_id = req.query.challengeid
+
+      //read goal from request body
+      let { date, entry } = req.body;
+
+      console.log("new entry: date", date, "entry", entry)
+
+      // add entry to the specified challenge
+      // pool.query(
+
+      // )
+      res.redirect('/challenge-view')
+   })
+
+   // edit entry
+   router.post('/challenge-view/data', (req,res)=>{
+
+      //read id's from url
+      const user_id = req.query.userid
+      const challenge_id = req.query.challengeid
+
+      //read goal from request body
+      // let { date, entry } = req.body;
+
+      console.log("edit entry: ", req.body)
+
+      // add entry to the specified challenge
+      // pool.query(
+
+      // )
+   })
 
    //redirects user to /dashboard route if he's trying to login again altough he is already logged in.
    function checkAuthenticated(req,res,next){

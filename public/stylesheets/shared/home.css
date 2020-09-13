@@ -115,3 +115,30 @@
   width:300px; 
   background: rgba(255, 255, 255, 0.3);
 }
+
+
+
+/* for bootstrap table */
+
+.table-responsive {
+  display: inline-block;
+  width: 100%;
+  overflow-x: auto
+}
+
+.table>thead>tr>th {
+  border-bottom-color: #ccc
+}
+
+.table th {
+  padding: 1.25rem 0.75rem
+}
+
+td,
+th {
+  white-space: nowrap
+}
+
+.tabledit-input:disabled {
+  display: none
+}
