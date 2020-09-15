@@ -5,7 +5,9 @@ const passport = require('passport')
 const bcrypt = require('bcrypt')
 const { pool } = require('../database/dbConfig')
 const DATE_FORMATER = require( 'dateformat' );
-const dbQuery = require('../database/models/Challenges.js')
+const dbQuery_Challenges = require('../database/models/Challenges.js')
+const dbQuery_Dashboard = require('../database/models/Dashboard.js')
+const dbQuery_ChallengeView = require('../database/models/Challenge-View.js')
 
 const initializePassport = require("../passportConfig")
 
@@ -44,6 +46,15 @@ router.get('/register',checkAuthenticated, async (req, res) => {
 
 // show user's dashboard with current and archived challenges
 router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
+   var user_id = req.user.uid
+
+   //get data for tiles
+   var numSolvedChallenges = await dbQuery_Dashboard.numSolvedChallenges(user_id)
+   var favChallenge = await dbQuery_Dashboard.favoriteChallenge(user_id)
+
+   //get current and completed challenges
+   var currentChallenges = await dbQuery_Dashboard.getCurrentChallenges(user_id)
+   var completedChallenges = await dbQuery_Dashboard.getCompletedChallenges(user_id)
 
    // TODO: request all current and past challenges of the current user
    result = {  current:[
@@ -75,14 +86,19 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
                   } 
                ],
                favourite: { 
-                  challengeid: 1,     
-                  challengeName: "VeggieDay"
+                  aid: favChallenge.aid,     
+                  aname: favChallenge.aname,
+                  count: favChallenge.count
                },
+               numSolvedChallenges: numSolvedChallenges,
                savedCO2: 12,
                user:req.user 
             }
 
-   res.render('dashboard',{name:req.user.name, result:result})
+   res.render('dashboard',{
+      name:req.user.name, result:result, 
+      currentChallenges:currentChallenges, completedChallenges:completedChallenges
+   })
 
    // TODO: if click on "to challenge" the app is redirected to the specific challenge-view
 })
@@ -90,16 +106,11 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
 // show challenge overview -> load all possible challenges from the challenge collection
 router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {   
 
-   var challenges = await dbQuery.getChallengesForChallengeOverview()
-
-   const start = new Date("2020-09-09")
-   const end = new Date("2020-09-16")
+   var challenges = await dbQuery_Challenges.getChallengesForChallengeOverview()
 
    res.render('challenge-overview',{
       challenges:challenges,
-      user:req.user,
-      startDate: start.toLocaleDateString("en-GB"),
-      endDate: end.toLocaleDateString("en-GB")
+      user:req.user
    })
 })
 
@@ -107,6 +118,11 @@ router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
 // no matter if current or archived
 // TODO: transfer username and challenge ID so the challenge can be loaded from the data base
 router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
+
+   //get params from query string
+   const ucr_id = req.query.ucr_id
+
+   const challengeData = await dbQuery_ChallengeView.getChallengeInfoForChallengeView(ucr_id)
 
    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
    const start = new Date("2020-09-9")
@@ -147,7 +163,8 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
 
    res.render('challenge-view',{
       challenge:result,
-      user:req.user
+      user:req.user,
+      challengeData:challengeData
    })
 
    // TODO: if relsuts is empty results.row throws an error!
@@ -338,8 +355,9 @@ router.get('/logout', (req,res) => {
 
       //verify that challenge hasn't already been accepted by the user
       pool.query(
-         `SELECT uid, cid, date_end FROM uc_rel
-         WHERE uid=$1 AND aid=$2 AND date_end >= NOW()`, [user_id, challenge_id], (err, results) => {
+         `SELECT uid, challenge.cid, date_end 
+         FROM uc_rel INNER JOIN challenge on uc_rel.cid = challenge.cid
+         WHERE uid=$1 AND challenge.cid=$2 AND date_end >= NOW()`, [user_id, challenge_id], (err, results) => {
             if (err) {
                console.log(err);
             }
@@ -353,8 +371,8 @@ router.get('/logout', (req,res) => {
             } else {
                //Add challenge to user (user-activity-relation table)       
                pool.query(
-                  `INSERT INTO uc_rel (uid, aid, goal, date_start, date_end) 
-                     VALUES ($1, $2, $3, (to_timestamp(${Date.now()} / 1000.0)), (to_timestamp(${Date.now()+challenge_duration} / 1000.0)))`,
+                  `INSERT INTO uc_rel (uid, cid, goal) 
+                     VALUES ($1, $2, $3)`,
                         [user_id, challenge_id, challengeGoal],
                         (err, results) => {
                            if (err) {

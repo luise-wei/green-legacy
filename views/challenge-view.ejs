@@ -1,6 +1,6 @@
 <div style="display: grid;">
     <h1 class="display-4 heading" style="grid-column-start: 1; grid-column-end: 5;">Dein Fortschritt in der Challenge
-        &nbsp; <strong> <%= challenge.info.challengeName %> </strong> </h1>
+        &nbsp; <strong> <%= challengeData.aname %> </strong> </h1>
     <a href="/dashboard" class="btn btn-secondary" style="height: 20%; grid-column: 6;"> Zurück zur Übersicht</a>
 </div>    
 
@@ -8,8 +8,8 @@
 
 <div class="container" >
     <div style="text-align: left; background-color: var(--decent-green); border-radius: 5px;">
-        Läuft vom: <b><%= challenge.info.startDate %></b> bis: <b><%= challenge.info.endDate %></b>
-        &nbsp; &nbsp; NOCH <%= challenge.info.daysLeft %> Tage
+        Läuft vom: <b><%= challengeData.date_start %></b> bis: <b><%= challengeData.date_end %></b>
+        &nbsp; &nbsp; NOCH <%= challengeData.daysleft %> Tage
     </div>
 
     <div style="padding-top: 20px; padding-bottom: 20px;">

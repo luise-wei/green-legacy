@@ -10,5 +10,6 @@ CREATE TABLE activity (
     infotext TEXT,
     defaultGoal NUMERIC,
     minGoal NUMERIC,
-    maxGoal NUMERIC
+    maxGoal NUMERIC,
+    savedCo2perunit NUMERIC
 );
