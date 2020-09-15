@@ -1,0 +1,1 @@
+UPDATE activity SET shortinfotext = 'Hier könnte noch ein Kurztext in der DB hinzugefügt werden' WHERE aname = 'Vegan Essen';

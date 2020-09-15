@@ -92,9 +92,14 @@ router.get('/challenge-overview',checkNotAuthenticated, async (req, res) => {
 
    var challenges = await dbQuery.getChallengesForChallengeOverview()
 
+   const start = new Date("2020-09-09")
+   const end = new Date("2020-09-16")
+
    res.render('challenge-overview',{
       challenges:challenges,
-      user:req.user
+      user:req.user,
+      startDate: start.toLocaleDateString("en-GB"),
+      endDate: end.toLocaleDateString("en-GB")
    })
 })
 
