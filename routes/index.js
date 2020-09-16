@@ -55,16 +55,9 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
       var favChallenge = await dbQuery_Dashboard.favoriteChallenge(user_id)
       var savedco2 = await dbQuery_Dashboard.savedCO2(user_id)
    }
-   catch{
-      numSolvedChallenges = 0
-      favChallenge = {
-         aid: 0,     
-         aname: '',
-         count: 0      
-      }
-      savedCO2 = 0
+   catch(e){
+      console.log(e)
    }
-   
 
    //get current and completed challenges
    var currentChallenges = await dbQuery_Dashboard.getCurrentChallenges(user_id)
