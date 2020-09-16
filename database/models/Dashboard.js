@@ -25,6 +25,25 @@ async function numSolvedChallenges(userId){
 
 // TODO!! 
 async function savedCO2(userId){
+   try{
+      const results = await pool.query(
+         `SELECT SUM(savedco2) as sumSavedCo2
+         FROM (
+            SELECT (input*savedco2perunit) as savedco2
+            FROM activity
+               INNER JOIN challenge on activity.aid = challenge.aid
+               INNER JOIN uc_rel on challenge.cid = uc_rel.cid
+               INNER JOIN challengeInput on uc_rel.ucr_id = challengeInput.ucr_id
+            WHERE uid = $1
+            ) tempTbl`,
+         [userId]
+         );
+      return results.rows[0].sumsavedco2;
+   }
+   catch(e){
+      console.log(e)
+      return [];
+  }
 }
 
 
@@ -85,4 +104,4 @@ async function getCompletedChallenges(userId){
 }
 
 
-module.exports = {numSolvedChallenges,favoriteChallenge,getCurrentChallenges,getCompletedChallenges}
+module.exports = {numSolvedChallenges,favoriteChallenge,savedCO2,getCurrentChallenges,getCompletedChallenges}

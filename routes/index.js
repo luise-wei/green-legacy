@@ -10,6 +10,7 @@ const dbQuery_Dashboard = require('../database/models/Dashboard.js')
 const dbQuery_ChallengeView = require('../database/models/Challenge-View.js')
 
 const initializePassport = require("../passportConfig")
+const { savedCO2 } = require('../database/models/Dashboard.js')
 
 initializePassport(passport)
 
@@ -51,6 +52,9 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
    //get data for tiles
    var numSolvedChallenges = await dbQuery_Dashboard.numSolvedChallenges(user_id)
    var favChallenge = await dbQuery_Dashboard.favoriteChallenge(user_id)
+   var savedco2 = await dbQuery_Dashboard.savedCO2(user_id)
+   
+   console.log(savedco2)
 
    //get current and completed challenges
    var currentChallenges = await dbQuery_Dashboard.getCurrentChallenges(user_id)
@@ -91,7 +95,7 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
                   count: favChallenge.count
                },
                numSolvedChallenges: numSolvedChallenges,
-               savedCO2: 12,
+               savedCO2: savedco2,
                user:req.user 
             }
 
@@ -125,6 +129,11 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
    var challengeData = await dbQuery_ChallengeView.getChallengeInfoForChallengeView(ucr_id)
    var challengeInputEntries = await dbQuery_ChallengeView.getDataEntriesToChallenge(ucr_id)
 
+   var sumEntries = 0
+   challengeInputEntries.forEach(input => {
+      sumEntries += input.value
+   }) 
+
    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
    const start = new Date("2020-09-9")
    const end = new Date("2020-09-16")
@@ -148,7 +157,7 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
                   }, 
                   {   
                      date: DATE_FORMATER( new Date(), "2020-09-11"),
-                     value: 1,
+                     value: 5,
                   }, 
                   {   
                      date: DATE_FORMATER( new Date(), "2020-09-12"),
@@ -156,8 +165,8 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
                   } 
                ],
                progress: {
-                  sum: 3, // sum of all values in entries
-                  percentage: 100 * 3/4 // progress in percent   
+                  sum: sumEntries, // sum of all values in entries
+                  percentage: 100 * Number(sumEntries) / Number(challengeData.goal) // progress in percent   
                },
                user:req.user 
    }
