@@ -14,8 +14,7 @@ async function getChallengeInfoForChallengeView(ucr_id){
       challengeData = results.rows[0]
       //trim leading 0 in daysLeft
       challengeData.daysleft = challengeData.daysleft.replace(/^0+/, '')
-
-      console.log(challengeData)
+      challengeData.daysleft++
    
       return challengeData;
    }

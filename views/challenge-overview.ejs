@@ -55,7 +55,7 @@
             </p>
 
             <div class="form-group">
-              <form id="challengeGoal-id-<%=challenge.aid%>" action="/challenge/accept?userid=<%=ucr_id%>&challengeid=<%=challenge.cid%>" method="post">
+              <form id="challengeGoal-id-<%=challenge.aid%>" action="/challenge/accept?userid=<%=user.uid%>&challengeid=<%=challenge.cid%>" method="post">
                 <label for="goal"><strong>Ziel:</strong></label>
                 <input type="number" name="challengeGoal" class="form-control" id="goal" aria-describedby="goalHelp" placeholder="<%=challenge.unit%>" min="<%=challenge.mingoal%>" max="<%=challenge.maxgoal%>" required>
                 <small id="goalHelp" class="form-text text-muted">Setze dir selber ein Ziel, dass du erreichen möchtest.</small>

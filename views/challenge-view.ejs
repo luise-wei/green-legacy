@@ -20,7 +20,7 @@
         <table class="table table-striped table-bordered" id="table">
         <thead class="thead-dark">
             <tr>
-                <th style="display: none;">#</th>
+                <th>e_id</th>
                 <th>Start Zeitraum</th>
                 <th>Ende Zeitraum</th>
                 <th>Wert [Tage]</th>
@@ -33,16 +33,15 @@
             <% inputs.forEach(input => { %>
             <% i++ %> 
             <tr>
-                <th scope="row" style="display: none;"><%= i %></th>
-                <!-- <td class="col-5"><%= input.e_date_start %></td> -->
+                <td class="tabledit-view-mode" style="cursor: pointer;" >
+                    <span class="tabledit-span"><%=input.e_id %></span>
+                </td>
                 <td class="tabledit-view-mode" style="cursor: pointer;">
                     <span class="tabledit-span"><%= input.e_date_start %></span>
-                    <!-- TODO: Add Dtaepicker as input -->
                     <input class="tabledit-input form-control input-sm" type="date" name="date" value="0" style="display: none;" disabled="">
                 </td>
                 <td class="tabledit-view-mode" style="cursor: pointer;">
                     <span class="tabledit-span"><%= input.e_date_end %></span>
-                    <!-- TODO: Add Dtaepicker as input -->
                     <input class="tabledit-input form-control input-sm" type="date" name="date" value="0" style="display: none;" disabled="">
                 </td>
 

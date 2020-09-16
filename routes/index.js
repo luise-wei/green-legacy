@@ -351,8 +351,6 @@ router.get('/logout', (req,res) => {
       //read goal from request body
       let {challengeGoal} = req.body;
 
-      console.log(challengeGoal)
-
       // convert from milliseconds to days
       challenge_duration *= 1000*60*60*24
 
@@ -415,15 +413,7 @@ router.get('/logout', (req,res) => {
       const user_id = req.query.userid
       const challenge_id = req.query.challengeid
 
-      //read goal from request body
-      // let { date, entry } = req.body;
-
-      console.log("edit entry: ", req.body)
-
-      // add entry to the specified challenge
-      // pool.query(
-
-      // )
+      
    })
 
    //redirects user to /dashboard route if he's trying to login again altough he is already logged in.
