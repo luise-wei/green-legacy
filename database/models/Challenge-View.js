@@ -28,12 +28,10 @@ async function getChallengeInfoForChallengeView(ucr_id){
 async function getDataEntriesToChallenge(ucr_id){
    try{
       const results = await pool.query(
-         `SELECT * 
-         FROM eingabe 
-            INNER JOIN uc_rel ON eingabe.ucr_id = uc_rel.ucr_id
-            INNER JOIN challenge on uc_rel.cid = challenge.cid
-            INNER JOIN activity on challenge.aid = activity.aid
-         WHERE uc_rel.ucr_id = $1 AND date_end >= NOW()`,
+         `SELECT uc_rel.ucr_id, uc_rel.uid, cid, goal, e_id, input as value, TO_CHAR(e_date_start, 'DD/MM/YYYY') as e_date_start, TO_CHAR(e_date_end, 'DD/MM/YYYY') as e_date_end
+         FROM uc_rel
+            INNER JOIN challengeInput on uc_rel.ucr_id = challengeInput.ucr_id
+         WHERE challengeInput.ucr_id = $1`,
          [ucr_id]
          );
    

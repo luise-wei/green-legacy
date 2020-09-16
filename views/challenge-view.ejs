@@ -21,27 +21,35 @@
         <thead class="thead-dark">
             <tr>
                 <th style="display: none;">#</th>
-                <th>Datum der Eingabe</th>
+                <th>Start Zeitraum</th>
+                <th>Ende Zeitraum</th>
                 <th>Wert [Tage]</th>
                 <!-- <th class="col-1">Ändern</th>
                 <th class="col-1">Löschen</th> -->
             </tr>
         </thead>
         <tbody>
-            <% for (var i = 0; i < challenge.entries.length;  i++) { %>
+            <% var i %>
+            <% inputs.forEach(input => { %>
+            <% i++ %> 
             <tr>
                 <th scope="row" style="display: none;"><%= i %></th>
-                <!-- <td class="col-5"><%= challenge.entries[i].date %></td> -->
+                <!-- <td class="col-5"><%= input.e_date_start %></td> -->
                 <td class="tabledit-view-mode" style="cursor: pointer;">
-                    <span class="tabledit-span"><%= challenge.entries[i].date %></span>
+                    <span class="tabledit-span"><%= input.e_date_start %></span>
+                    <!-- TODO: Add Dtaepicker as input -->
+                    <input class="tabledit-input form-control input-sm" type="date" name="date" value="0" style="display: none;" disabled="">
+                </td>
+                <td class="tabledit-view-mode" style="cursor: pointer;">
+                    <span class="tabledit-span"><%= input.e_date_end %></span>
                     <!-- TODO: Add Dtaepicker as input -->
                     <input class="tabledit-input form-control input-sm" type="date" name="date" value="0" style="display: none;" disabled="">
                 </td>
 
-                <!-- <td class="col-5 tabledit-view-mode" style="cursor: pointer;"><%= challenge.entries[i].value %></td> -->
+                <!-- <td class="col-5 tabledit-view-mode" style="cursor: pointer;"><%= input.value %></td> -->
 
                 <td class="tabledit-view-mode" style="cursor: pointer;">
-                    <span class="tabledit-span"><%= challenge.entries[i].value %></span>
+                    <span class="tabledit-span"><%= input.value %></span>
                     <input class="tabledit-input form-control input-sm" type="number" name="value" value="0" style="display: none;" disabled="">
                 </td>
 
@@ -52,7 +60,7 @@
                     </span>
                 </td> -->
             </tr>  
-            <% } %>
+            <% }) %>
         </tbody>
         <!-- TODO: Make summary row unaditable -->
         <!-- <tfoot>
@@ -196,11 +204,12 @@
           <div class="form-group">
             <form id="challengeEntry-id-<%=challenge.info.challengeid%>" action="/challenge-view/entry?userid=<%=user.uid%>&challengeid=<%=challenge.info.challengeid%>" method="post">
                 
-                <div class="form-group input-group date" data-provide="datepicker-inline">
-                    <input type="text" class="form-control datepicker" name="date"  data-date-format="dd/mm/yyyy">
-                    <div class="input-group-addon">
-                        <span class="fas fa-calendar input-prefix"></span>
-                    </div>
+                <div class="form-group">
+                    <label for="date_start"><strong>Zeitraum:</strong>
+                        <i class="fa fa-calendar input-prefix"></i>
+                    </label>
+                    <input placeholder="Start Tag" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date_start" name="date_start" data-date-format="dd/mm/yyyy" />
+                    <input placeholder="Ende Tag" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date_end" name="date_end" data-date-format="dd/mm/yyyy" />
                 </div>    
                 <div class="form-group">
                     <label for="goal"><strong>Eintrag:</strong></label>

@@ -85,7 +85,7 @@ router.get('/dashboard',checkNotAuthenticated, async (req, res) => {
                      icon:"fas fa-carrot"
                   } 
                ],
-               favourite: { 
+               favorite: { 
                   aid: favChallenge.aid,     
                   aname: favChallenge.aname,
                   count: favChallenge.count
@@ -122,7 +122,8 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
    //get params from query string
    const ucr_id = req.query.ucr_id
 
-   const challengeData = await dbQuery_ChallengeView.getChallengeInfoForChallengeView(ucr_id)
+   var challengeData = await dbQuery_ChallengeView.getChallengeInfoForChallengeView(ucr_id)
+   var challengeInputEntries = await dbQuery_ChallengeView.getDataEntriesToChallenge(ucr_id)
 
    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
    const start = new Date("2020-09-9")
@@ -164,7 +165,8 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
    res.render('challenge-view',{
       challenge:result,
       user:req.user,
-      challengeData:challengeData
+      challengeData:challengeData,
+      inputs:challengeInputEntries
    })
 
    // TODO: if relsuts is empty results.row throws an error!

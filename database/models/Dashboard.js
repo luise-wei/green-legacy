@@ -41,7 +41,7 @@ async function favoriteChallenge(userId){
          LIMIT 1;`,
          [userId]
          );
-      return results.rows;
+      return results.rows[0];
    }
    catch(e){
       console.log(e)
