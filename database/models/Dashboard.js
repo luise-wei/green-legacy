@@ -60,6 +60,17 @@ async function favoriteChallenge(userId){
          LIMIT 1;`,
          [userId]
          );
+
+      if(!results.rows[0]){
+         var x = 
+         { 
+            aid: -1,     
+            aname: '',
+            count: -1
+         }
+         return x
+      }
+
       return results.rows[0];
    }
    catch(e){

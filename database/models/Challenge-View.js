@@ -27,15 +27,10 @@ async function getChallengeInfoForChallengeView(ucr_id){
 async function getDataEntriesToChallenge(ucr_id){
    try{
       const results = await pool.query(
-         `SELECT SUM(savedco2) as sumSavedCo2
-         FROM (
-            SELECT (input*savedco2perunit) as savedco2
-            FROM activity
-               INNER JOIN challenge on activity.aid = challenge.aid
-               INNER JOIN uc_rel on challenge.cid = uc_rel.cid
-               INNER JOIN challengeInput on uc_rel.ucr_id = challengeInput.ucr_id
-            WHERE uid = $1
-            ) tempTbl`,
+         `SELECT uc_rel.ucr_id, uc_rel.uid, cid, goal, e_id, input as value, TO_CHAR(e_date_start, 'DD/MM/YYYY') as e_date_start, TO_CHAR(e_date_end, 'DD/MM/YYYY') as e_date_end
+         FROM uc_rel
+            INNER JOIN challengeInput on uc_rel.ucr_id = challengeInput.ucr_id
+         WHERE challengeInput.ucr_id = $1`,
          [ucr_id]
          );
    
