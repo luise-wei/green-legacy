@@ -68,6 +68,12 @@ $(document).ready(function() {
     }
     });
 
+
+//edit save button:
+$("p").on(function(){
+  alert("working!")
+});
+
 });
 
 // fill and create chart

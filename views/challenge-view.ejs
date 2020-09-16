@@ -62,19 +62,11 @@
             </tr>  
             <% }) %>
         </tbody>
-        <!-- TODO: Make summary row unaditable -->
-        <!-- <tfoot>
-            <tr>
-                <th scope="row" style="display: none;"><%= i %></th>
-                <td><%= challenge.entries.length %> Einträge</td>
-                <td><%= challenge.progress.sum %> <%= challenge.info.unit %></td> 
-            </tr> 
-        </tfoot> -->
         </table>
     </div>
     
-    <div style="text-align: right;">
-        <button class="btn btn-primary table-add" id="add" data-toggle="modal" data-target="#newEntryModal-id-<%=challenge.info.challengeid%>">Eintrag hinzufügen</button>
+    <div style="text-align: center;">
+        <button class="btn btn-success table-add" id="add" data-toggle="modal" data-target="#newEntryModal-id-<%=challengeData.ucr_id%>">Eintrag hinzufügen</button>
     </div>
 
     <!-- <div class="divider"></div> -->
@@ -183,39 +175,34 @@
 
 
 <!-- Add Entry - Modal -->
-<div class="modal fade" id="newEntryModal-id-<%=challenge.info.challengeid%>" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+<div class="modal fade" id="newEntryModal-id-<%=challengeData.ucr_id%>" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="addModalLabel"> Neuer Eintrag für <%=challenge.info.challengeName%></h4>
+          <h4 class="modal-title" id="addModalLabel"> Neuer Eintrag für <%=challengeData.aname%></h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
 
-          <!-- <img src="<%=challenge.image%>"class="img-fluid" alt="Responsive image"> -->
-
-          <!-- <p class="font-weight-normal">
-            <br>
-            <%=challenge.infotext%>
-          </p> -->
-
           <div class="form-group">
-            <form id="challengeEntry-id-<%=challenge.info.challengeid%>" action="/challenge-view/entry?userid=<%=user.uid%>&challengeid=<%=challenge.info.challengeid%>" method="post">
+            <form id="challengeEntry-id-<%=challengeData.ucr_id%>" action="/challenge-view/entry?userid=<%=user.uid%>&ucr_id=<%=challengeData.ucr_id%>" method="post">
                 
                 <div class="form-group">
                     <label for="date_start"><strong>Zeitraum:</strong>
                         <i class="fa fa-calendar input-prefix"></i>
                     </label>
-                    <input placeholder="Start Tag" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date_start" name="date_start" data-date-format="dd/mm/yyyy" />
-                    <input placeholder="Ende Tag" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date_end" name="date_end" data-date-format="dd/mm/yyyy" />
+                    <input placeholder="Start Tag" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date_start" name="date_start" data-date-format="dd/mm/yyyy" required/>
+                    <input placeholder="Ende Tag" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date_end" name="date_end" data-date-format="dd/mm/yyyy" required/>
                 </div>    
                 <div class="form-group">
-                    <label for="goal"><strong>Eintrag:</strong></label>
+                    <label for="goal"><strong>Eintrag:</strong>
+                        <i class="fas fa-file-signature"></i>
+                    </label>
                     <!-- TODO: make input variable - according to input type of challenge -->
-                    <input type="number" class="form-control" name="entry" id="entry" aria-describedby="entryHelp" placeholder="z.B. 1" min="1" max="1" required>
-                    <small id="entryHelp" class="form-text text-muted">Gib deinen Fortschritt in [<%=challenge.info.unit%>] an.</small>
+                    <input type="number" class="form-control" name="entry" id="entry" aria-describedby="entryHelp" placeholder="z.B. 1" min="<%=challengeData.mingoal%>" max="<%=challengeData.maxgoal%>" required>
+                    <small id="entryHelp" class="form-text text-muted">Gib deinen Fortschritt in [<%=challengeData.unit%>] an.</small>
                 </div>
                 
             </form>
@@ -223,7 +210,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Zurück</button>
-          <button class="btn btn-success" form="challengeEntry-id-<%=challenge.info.challengeid%>" type="submit">Eintrag hinzufügen</button>
+          <button class="btn btn-success" form="challengeEntry-id-<%=challengeData.ucr_id%>" type="submit">Eintrag hinzufügen</button>
         </div>
       </div>
     </div>

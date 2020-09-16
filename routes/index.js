@@ -166,7 +166,8 @@ router.get('/challenge-view',checkNotAuthenticated, async (req, res) => {
       challenge:result,
       user:req.user,
       challengeData:challengeData,
-      inputs:challengeInputEntries
+      inputs:challengeInputEntries,
+      ucr_id:ucr_id
    })
 
    // TODO: if relsuts is empty results.row throws an error!
@@ -397,18 +398,14 @@ router.get('/logout', (req,res) => {
 
       //read id's from url
       const user_id = req.query.userid
-      const challenge_id = req.query.challengeid
+      const ucr_id = req.query.ucr_id
 
       //read goal from request body
-      let { date, entry } = req.body;
+      let { date_start, date_end, entry } = req.body;
 
-      console.log("new entry: date", date, "entry", entry)
+      dbQuery_ChallengeView.newChallengeInputEntry(ucr_id,entry,date_start,date_end)
 
-      // add entry to the specified challenge
-      // pool.query(
-
-      // )
-      res.redirect('/challenge-view')
+      res.redirect('/challenge-view?ucr_id='+ucr_id)
    })
 
    // edit entry
@@ -449,5 +446,37 @@ router.get('/logout', (req,res) => {
          }
       res.redirect('/login')
    }
+
+
+
+
+
+// ------------------
+// --- PUT ROUTES ---
+// ------------------
+
+//Update ChallengeInput entry
+router.post('/challenge-view/entry', (req,res)=>{
+
+   //read id's from url
+   const user_id = req.query.userid
+   const ucr_id = req.query.ucr_id
+
+   //read goal from request body
+   let { date_start, date_end, entry } = req.body;
+
+   dbQuery_ChallengeView.updateChallengeInputEntry(e_id,ucr_id,entry,date_start,date_end)
+
+   res.redirect('/challenge-view?ucr_id='+ucr_id)
+})
+
+
+// -------------------
+// -- DELETE ROUTES --
+// -------------------
+router.get('/test', (req,res)=>{
+   res.send('Working!')
+})
+
 
 module.exports = router

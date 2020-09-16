@@ -43,4 +43,18 @@ async function getDataEntriesToChallenge(ucr_id){
   }
 }
 
-module.exports = {getChallengeInfoForChallengeView,getDataEntriesToChallenge}
+async function newChallengeInputEntry(ucr_id,input,dateStart,dateEnd){
+   try{
+      const results = await pool.query(
+         `INSERT INTO challengeInput (ucr_id,input,e_date_start,e_date_end)
+         VALUES ($1,$2,$3,$4)`,
+         [ucr_id,input,dateStart,dateEnd]
+         );
+   }
+   catch(e){
+      console.log(e)
+      return [];
+  }
+}
+
+module.exports = {getChallengeInfoForChallengeView,getDataEntriesToChallenge,newChallengeInputEntry}
